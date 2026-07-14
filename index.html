@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>主題配色預覽模板</title>
+  <style>
+    :root {
+      --v-theme-primary: 38, 103, 194;
+      --v-theme-secondary: 75, 172, 163;
+      --v-theme-warning: 255, 179, 0;
+      --v-theme-surface: 255, 255, 255;
+      --v-theme-on-surface: 33, 37, 41;
+      --v-theme-on-primary: 255, 255, 255;
+      --page-bg: #f5f7fb;
+      --panel-bg: #ffffff;
+      --text-color: #212529;
+      --border-color: #dfe3ea;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+      color: var(--text-color);
+      background: var(--page-bg);
+    }
+
+    body.dark-mode {
+      --page-bg: #0f172a;
+      --panel-bg: #111827;
+      --text-color: #f8fafc;
+      --border-color: #334155;
+    }
+
+    .page {
+      width: min(1080px, calc(100% - 32px));
+      margin: 24px auto;
+    }
+
+    .toolbar,
+    .preview-card {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .toolbar {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    .toolbar h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .control label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    select,
+    button {
+      min-height: 42px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--panel-bg);
+      color: var(--text-color);
+      padding: 0 12px;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.primary {
+      color: rgb(var(--v-theme-on-primary));
+      background: rgb(var(--v-theme-primary));
+      border-color: rgb(var(--v-theme-primary));
+    }
+
+    .preview-card {
+      padding: 20px;
+    }
+
+    .preview-title {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .applySSettings_preview {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: rgb(var(--v-theme-surface));
+      border: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+    }
+
+    .preview_sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20%;
+      height: 100%;
+      padding: 8% 6%;
+      background-color: rgb(var(--v-theme-primary));
+      display: flex;
+      flex-direction: column;
+      gap: 7%;
+      z-index: 2;
+    }
+
+    .preview_menu {
+      display: block;
+      width: 100%;
+      height: 8px;
+      border-radius: 2px;
+      background-color: rgb(var(--v-theme-on-primary));
+      opacity: 0.45;
+    }
+
+    .preview_map {
+      position: absolute;
+      top: 0;
+      left: 20%;
+      right: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: rgba(var(--v-theme-on-surface), 0.04);
+    }
+
+    .preview_road {
+      position: absolute;
+      background-color: rgba(var(--v-theme-on-surface), 0.07);
+    }
+
+    .preview_park {
+      position: absolute;
+      border-radius: 3px;
+      background-color: rgba(76, 175, 80, 0.14);
+    }
+
+    .preview_river {
+      position: absolute;
+      top: -20%;
+      right: 4%;
+      width: 26%;
+      height: 150%;
+      transform: rotate(24deg);
+      border-radius: 40%;
+      background-color: rgba(var(--v-theme-secondary), 0.18);
+    }
+
+    .preview_block {
+      position: absolute;
+      border-radius: 3px;
+      background-color: rgba(var(--v-theme-on-surface), 0.08);
+    }
+
+    .preview_water {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 45%;
+      height: 45%;
+      border-top-left-radius: 60% 80%;
+      background-color: rgba(var(--v-theme-secondary), 0.18);
+    }
+
+    .preview_window {
+      position: absolute;
+      top: 22%;
+      right: 5%;
+      width: 46%;
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: rgb(var(--v-theme-surface));
+      box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+      z-index: 3;
+    }
+
+    .win_title {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 8px;
+      background-color: rgba(var(--v-theme-primary), 0.15);
+      border-bottom: 1px solid rgba(var(--v-theme-primary), 0.5);
+    }
+
+    body.dark-mode .win_title {
+      background-color: rgba(var(--v-theme-primary), 0.5);
+    }
+
+    .win_icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background-color: rgba(var(--v-theme-on-surface), 0.7);
+    }
+
+    .win_tab {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba(var(--v-theme-on-surface), 0.3);
+    }
+
+    .win_toggle {
+      position: relative;
+      margin-left: auto;
+      width: 22px;
+      height: 12px;
+      border-radius: 6px;
+      background-color: rgb(var(--v-theme-warning));
+    }
+
+    .win_toggle_knob {
+      position: absolute;
+      top: 1px;
+      right: 1px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #fff;
+    }
+
+    .win_close {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background-color: rgba(var(--v-theme-on-surface), 0.45);
+    }
+
+    .legacy .win_close {
+      margin-left: auto;
+    }
+
+    .win_body {
+      padding: 9px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .win_row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .win_dot {
+      flex: 0 0 auto;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .dot_primary { background-color: rgb(var(--v-theme-primary)); }
+    .dot_secondary { background-color: rgb(var(--v-theme-secondary)); }
+    .dot_muted { background-color: rgba(var(--v-theme-on-surface), 0.2); }
+
+    .win_line {
+      height: 6px;
+      border-radius: 3px;
+      background-color: rgba(var(--v-theme-on-surface), 0.12);
+    }
+
+    .win_footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      padding: 7px 8px;
+      border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+    }
+
+    .win_btn {
+      width: 26%;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .btn_ghost {
+      background-color: rgb(var(--v-theme-surface));
+      border: 1px solid rgba(var(--v-theme-on-surface), 0.25);
+    }
+
+    .btn_primary {
+      background-color: rgb(var(--v-theme-secondary));
+    }
+
+    .accent-decoration {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .accent-circle {
+      right: 5%;
+      bottom: 5%;
+      width: 16%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(var(--v-theme-warning), 0.18);
+    }
+
+    .accent-dots {
+      top: 6%;
+      right: 4%;
+      width: 44px;
+      height: 30px;
+      opacity: 0.55;
+      background-image: radial-gradient(
+        circle,
+        rgb(var(--v-theme-warning)) 1.5px,
+        transparent 1.5px
+      );
+      background-size: 9px 9px;
+    }
+
+    .theme-note {
+      margin-top: 16px;
+      padding: 12px 14px;
+      border-left: 4px solid rgb(var(--v-theme-warning));
+      background: rgba(var(--v-theme-warning), 0.10);
+      border-radius: 6px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .page {
+        width: min(100% - 20px, 1080px);
+        margin: 10px auto;
+      }
+
+      .toolbar,
+      .preview-card {
+        border-radius: 10px;
+      }
+
+      .preview-card {
+        padding: 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="toolbar">
+      <h1>主題配色預覽模板</h1>
+
+      <div class="controls">
+        <div class="control">
+          <label for="version">預覽版本</label>
+          <select id="version">
+            <option value="current">現在版：道路、綠地、河流</option>
+            <option value="legacy">前一版：抽象區塊、水域</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="mode">主題模式</label>
+          <select id="mode">
+            <option value="light">淺色</option>
+            <option value="dark">深色</option>
+          </select>
+        </div>
+
+        <div class="control">
+          <label for="theme">快速主題</label>
+          <select id="theme"></select>
+        </div>
+
+        <div class="control">
+          <label>&nbsp;</label>
+          <button id="reset" class="primary" type="button">恢復目前主題</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="preview-card">
+      <h2 class="preview-title">預覽</h2>
+
+      <div id="preview" class="applySSettings_preview">
+        <div class="preview_sidebar">
+          <span class="preview_menu"></span>
+          <span class="preview_menu"></span>
+          <span class="preview_menu"></span>
+          <span class="preview_menu"></span>
+          <span class="preview_menu"></span>
+          <span class="preview_menu"></span>
+        </div>
+
+        <div id="mapCurrent" class="preview_map">
+          <span class="preview_park" style="top:8%; left:6%; width:15%; height:18%;"></span>
+          <span class="preview_park" style="top:68%; left:28%; width:18%; height:22%;"></span>
+          <span class="preview_road" style="top:0; left:24%; width:3px; height:100%;"></span>
+          <span class="preview_road" style="top:0; left:56%; width:3px; height:100%;"></span>
+          <span class="preview_road" style="top:28%; left:0; width:100%; height:3px;"></span>
+          <span class="preview_road" style="top:64%; left:0; width:100%; height:3px;"></span>
+          <span class="preview_river"></span>
+        </div>
+
+        <div id="mapLegacy" class="preview_map" hidden>
+          <span class="preview_block" style="top:12%; left:12%; width:30%; height:22%;"></span>
+          <span class="preview_block" style="top:44%; left:8%; width:22%; height:18%;"></span>
+          <span class="preview_block" style="top:20%; left:50%; width:24%; height:30%;"></span>
+          <span class="preview_water"></span>
+        </div>
+
+        <span class="accent-decoration accent-circle"></span>
+        <span class="accent-decoration accent-dots"></span>
+
+        <div class="preview_window">
+          <div class="win_title">
+            <span class="win_icon"></span>
+            <span class="win_tab"></span>
+            <span class="win_tab"></span>
+            <span id="toggle" class="win_toggle">
+              <span class="win_toggle_knob"></span>
+            </span>
+            <span class="win_close"></span>
+          </div>
+
+          <div class="win_body">
+            <div class="win_row">
+              <span class="win_dot dot_primary"></span>
+              <span class="win_line" style="width:62%"></span>
+            </div>
+            <div class="win_row">
+              <span class="win_dot dot_secondary"></span>
+              <span class="win_line" style="width:48%"></span>
+            </div>
+            <div class="win_row">
+              <span class="win_dot dot_muted"></span>
+              <span class="win_line" style="width:56%"></span>
+            </div>
+            <div class="win_row">
+              <span class="win_dot dot_muted"></span>
+              <span class="win_line" style="width:40%"></span>
+            </div>
+          </div>
+
+          <div class="win_footer">
+            <span class="win_btn btn_ghost"></span>
+            <span class="win_btn btn_primary"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme-note">
+        強調色使用於背景圓弧、點陣裝飾與切換開關，不取代主色或輔色的功能。
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const themes = {
+      light: [
+        { name: "極簡現代", primary: "74, 85, 104", secondary: "38, 103, 194", warning: "197, 168, 128", surface: "255, 255, 255", onSurface: "26, 26, 26", onPrimary: "255, 255, 255" },
+        { name: "自然永續", primary: "45, 74, 62", secondary: "143, 188, 143", warning: "212, 163, 115", surface: "247, 245, 240", onSurface: "33, 52, 42", onPrimary: "255, 255, 255" },
+        { name: "復古學院", primary: "122, 32, 33", secondary: "30, 58, 47", warning: "229, 169, 59", surface: "242, 235, 217", onSurface: "53, 43, 34", onPrimary: "255, 255, 255" },
+        { name: "溫柔奶油", primary: "211, 179, 153", secondary: "212, 226, 212", warning: "249, 168, 168", surface: "250, 246, 240", onSurface: "68, 55, 49", onPrimary: "61, 49, 43" },
+        { name: "繽紛多肉", primary: "59, 130, 246", secondary: "45, 212, 191", warning: "236, 72, 153", surface: "255, 255, 255", onSurface: "17, 24, 39", onPrimary: "255, 255, 255" },
+        { name: "海洋清新", primary: "38, 143, 168", secondary: "110, 198, 216", warning: "255, 183, 77", surface: "243, 251, 253", onSurface: "32, 54, 61", onPrimary: "255, 255, 255" },
+        { name: "冰川科技", primary: "64, 169, 219", secondary: "126, 203, 226", warning: "111, 120, 255", surface: "248, 251, 255", onSurface: "31, 41, 55", onPrimary: "255, 255, 255" },
+        { name: "經典商務", primary: "30, 58, 95", secondary: "113, 142, 181", warning: "38, 103, 194", surface: "248, 250, 252", onSurface: "31, 41, 55", onPrimary: "255, 255, 255" }
+      ],
+      dark: [
+        { name: "科技未來", primary: "0, 242, 254", secondary: "79, 172, 254", warning: "255, 0, 122", surface: "11, 15, 25", onSurface: "241, 245, 249", onPrimary: "11, 15, 25" },
+        { name: "深夜極簡", primary: "144, 164, 174", secondary: "96, 125, 139", warning: "255, 255, 255", surface: "18, 20, 22", onSurface: "245, 247, 248", onPrimary: "18, 20, 22" },
+        { name: "深海科技", primary: "0, 188, 212", secondary: "33, 150, 243", warning: "100, 255, 218", surface: "7, 26, 43", onSurface: "242, 250, 255", onPrimary: "7, 26, 43" },
+        { name: "夜林自然", primary: "76, 175, 80", secondary: "129, 199, 132", warning: "205, 220, 57", surface: "16, 33, 24", onSurface: "243, 250, 245", onPrimary: "16, 33, 24" },
+        { name: "暗紅復古", primary: "194, 24, 91", secondary: "122, 32, 33", warning: "229, 169, 59", surface: "33, 16, 22", onSurface: "255, 247, 250", onPrimary: "255, 247, 250" },
+        { name: "霓虹繽紛", primary: "139, 92, 246", secondary: "34, 211, 238", warning: "236, 72, 153", surface: "17, 17, 39", onSurface: "250, 248, 255", onPrimary: "255, 255, 255" },
+        { name: "石墨商務", primary: "96, 165, 250", secondary: "100, 116, 139", warning: "56, 189, 248", surface: "24, 30, 36", onSurface: "245, 247, 248", onPrimary: "255, 255, 255" },
+        { name: "暗紫精品", primary: "126, 87, 194", secondary: "149, 117, 205", warning: "244, 143, 177", surface: "24, 20, 48", onSurface: "250, 248, 255", onPrimary: "255, 255, 255" }
+      ]
+    };
+
+    const versionSelect = document.getElementById("version");
+    const modeSelect = document.getElementById("mode");
+    const themeSelect = document.getElementById("theme");
+    const preview = document.getElementById("preview");
+    const mapCurrent = document.getElementById("mapCurrent");
+    const mapLegacy = document.getElementById("mapLegacy");
+    const toggle = document.getElementById("toggle");
+    const resetButton = document.getElementById("reset");
+
+    function populateThemes() {
+      const mode = modeSelect.value;
+      themeSelect.innerHTML = "";
+      themes[mode].forEach((theme, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = theme.name;
+        themeSelect.appendChild(option);
+      });
+      applyTheme();
+    }
+
+    function applyTheme() {
+      const mode = modeSelect.value;
+      const theme = themes[mode][Number(themeSelect.value || 0)];
+      const root = document.documentElement;
+
+      root.style.setProperty("--v-theme-primary", theme.primary);
+      root.style.setProperty("--v-theme-secondary", theme.secondary);
+      root.style.setProperty("--v-theme-warning", theme.warning);
+      root.style.setProperty("--v-theme-surface", theme.surface);
+      root.style.setProperty("--v-theme-on-surface", theme.onSurface);
+      root.style.setProperty("--v-theme-on-primary", theme.onPrimary);
+
+      document.body.classList.toggle("dark-mode", mode === "dark");
+    }
+
+    function applyVersion() {
+      const legacy = versionSelect.value === "legacy";
+      mapCurrent.hidden = legacy;
+      mapLegacy.hidden = !legacy;
+      toggle.hidden = legacy;
+      preview.classList.toggle("legacy", legacy);
+    }
+
+    versionSelect.addEventListener("change", applyVersion);
+    modeSelect.addEventListener("change", populateThemes);
+    themeSelect.addEventListener("change", applyTheme);
+    resetButton.addEventListener("click", applyTheme);
+
+    populateThemes();
+    applyVersion();
+  </script>
+</body>
+</html>
