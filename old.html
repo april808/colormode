@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>預覽模板（前一版）</title>
+  <style>
+    :root {
+      --v-theme-primary: 92, 107, 192;     /* #5C6BC0 主色 */
+      --v-theme-secondary: 38, 166, 154;   /* #26A69A 輔色 */
+      --v-theme-warning: 251, 140, 0;      /* #FB8C00 強調色 */
+      --v-theme-surface: 255, 255, 255;    /* 表面色 */
+      --v-theme-on-surface: 33, 37, 41;    /* 主要文字色 */
+      --v-theme-on-primary: 255, 255, 255; /* 主色上文字 */
+    }
+    body { margin: 24px; background: #eef1f5; font-family: system-ui, "Noto Sans TC", sans-serif; }
+    h1 { font-size: 14px; color: #555; font-weight: 500; }
+
+    /* ── 預覽外框 ── */
+    .applySSettings_preview { position: relative; width: 100%; max-width: 520px; aspect-ratio: 16 / 9;
+      border-radius: 8px; overflow: hidden; background-color: rgb(var(--v-theme-surface));
+      border: 1px solid rgba(var(--v-theme-on-surface), 0.12); }
+
+    /* 左側選單欄（主色） */
+    .applySSettings_preview .preview_sidebar { position: absolute; top: 0; left: 0; width: 20%; height: 100%;
+      padding: 8% 6%; background-color: rgb(var(--v-theme-primary)); display: flex; flex-direction: column; gap: 7%; z-index: 2; }
+    .applySSettings_preview .preview_menu { display: block; width: 100%; height: 8px; border-radius: 2px;
+      background-color: rgb(var(--v-theme-on-primary)); opacity: 0.45; }
+
+    /* 地圖區（前一版：淡色方塊 + 一角水域） */
+    .applySSettings_preview .preview_map { position: absolute; top: 0; left: 20%; right: 0; height: 100%; overflow: hidden;
+      background-color: rgba(var(--v-theme-on-surface), 0.04); }
+    .applySSettings_preview .preview_block { position: absolute; border-radius: 3px; background-color: rgba(var(--v-theme-on-surface), 0.08); }
+    .applySSettings_preview .preview_water { position: absolute; right: 0; bottom: 0; width: 45%; height: 45%;
+      border-top-left-radius: 60% 80%; background-color: rgba(var(--v-theme-secondary), 0.18); }
+
+    /* 浮動設定視窗（前一版：標題列無切換開關、close 靠右） */
+    .applySSettings_preview .preview_window { position: absolute; top: 22%; right: 5%; width: 46%; border-radius: 6px;
+      overflow: hidden; background-color: rgb(var(--v-theme-surface)); box-shadow: 0 4px 14px rgba(0,0,0,0.22); z-index: 3; }
+    .applySSettings_preview .win_title { display: flex; align-items: center; gap: 5px; padding: 7px 8px;
+      background-color: rgba(var(--v-theme-primary), 0.15); border-bottom: 1px solid rgba(var(--v-theme-primary), 0.5); }
+    .applySSettings_preview .win_icon { width: 12px; height: 12px; border-radius: 3px; background-color: rgba(var(--v-theme-on-surface), 0.7); }
+    .applySSettings_preview .win_tab { width: 8px; height: 8px; border-radius: 50%; background-color: rgba(var(--v-theme-on-surface), 0.3); }
+    .applySSettings_preview .win_close { width: 8px; height: 8px; margin-left: auto; border-radius: 2px; background-color: rgba(var(--v-theme-on-surface), 0.45); }
+    .applySSettings_preview .win_body { padding: 9px 8px; display: flex; flex-direction: column; gap: 8px; }
+    .applySSettings_preview .win_row { display: flex; align-items: center; gap: 7px; }
+    .applySSettings_preview .win_dot { flex: 0 0 auto; width: 9px; height: 9px; border-radius: 50%; }
+    .applySSettings_preview .win_dot.dot_primary { background-color: rgb(var(--v-theme-primary)); }
+    .applySSettings_preview .win_dot.dot_secondary { background-color: rgb(var(--v-theme-secondary)); }
+    .applySSettings_preview .win_dot.dot_muted { background-color: rgba(var(--v-theme-on-surface), 0.2); }
+    .applySSettings_preview .win_line { height: 6px; border-radius: 3px; background-color: rgba(var(--v-theme-on-surface), 0.12); }
+    .applySSettings_preview .win_footer { display: flex; justify-content: flex-end; gap: 6px; padding: 7px 8px;
+      border-top: 1px solid rgba(var(--v-theme-on-surface), 0.08); }
+    .applySSettings_preview .win_btn { width: 26%; height: 12px; border-radius: 3px; }
+    .applySSettings_preview .win_btn.btn_ghost { background-color: rgb(var(--v-theme-surface)); border: 1px solid rgba(var(--v-theme-on-surface), 0.25); }
+    .applySSettings_preview .win_btn.btn_primary { background-color: rgb(var(--v-theme-secondary)); }
+  </style>
+</head>
+<body>
+  <h1>預覽模板（前一版）— 地圖=淡色方塊、視窗無切換開關</h1>
+  <div class="applySSettings_preview">
+    <div class="preview_sidebar">
+      <span class="preview_menu"></span><span class="preview_menu"></span><span class="preview_menu"></span>
+      <span class="preview_menu"></span><span class="preview_menu"></span><span class="preview_menu"></span>
+    </div>
+    <div class="preview_map">
+      <span class="preview_block" style="top:12%; left:12%; width:30%; height:22%;"></span>
+      <span class="preview_block" style="top:44%; left:8%; width:22%; height:18%;"></span>
+      <span class="preview_block" style="top:20%; left:50%; width:24%; height:30%;"></span>
+      <span class="preview_water"></span>
+    </div>
+    <div class="preview_window">
+      <div class="win_title">
+        <span class="win_icon"></span><span class="win_tab"></span><span class="win_tab"></span><span class="win_close"></span>
+      </div>
+      <div class="win_body">
+        <div class="win_row"><span class="win_dot dot_primary"></span><span class="win_line" style="width:62%"></span></div>
+        <div class="win_row"><span class="win_dot dot_secondary"></span><span class="win_line" style="width:48%"></span></div>
+        <div class="win_row"><span class="win_dot dot_muted"></span><span class="win_line" style="width:56%"></span></div>
+        <div class="win_row"><span class="win_dot dot_muted"></span><span class="win_line" style="width:40%"></span></div>
+      </div>
+      <div class="win_footer">
+        <span class="win_btn btn_ghost"></span><span class="win_btn btn_primary"></span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
